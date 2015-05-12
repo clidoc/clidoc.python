@@ -9,9 +9,23 @@ import re
 
 # represent outcome of input argument preprocessing.
 class Token(object):
+    #
+    # input argument types:
+    # * POSIX_OPTION
+    # * GNU_OPTION
+    # * GENERAL_ELEMENT
+    #
+    # AST token types:
+    # * POSIX_OPTION
+    # * GNU_OPTION
+    # * COMMAND
+    # * ARGUMENT
+    #
     POSIX_OPTION = 0
     GNU_OPTION = 1
     GENERAL_ELEMENT = 2
+    COMMAND = 3
+    ARGUMENT = 4
 
     def __init__(self, type_id, value):
         self.type_id = type_id
@@ -33,6 +47,7 @@ class Token(object):
 class Info(object):
     # root of AST.
     doc_node = None
+
     # `set` of `Token`.
     bound_options = None
     unbound_options = None
@@ -40,6 +55,7 @@ class Info(object):
     oom_bound_options = None
     oom_arguments = None
     commands = None
+
     # `dict` contains mapping from `Token` to string.
     default_values = None
     # `dict` contains mapping from `Token` to `Token`.
@@ -48,8 +64,8 @@ class Info(object):
     doc_text = None
 
     # shared by all match state object.
-    _tokens = []
-    _token_skip_table = defaultdict(list)
+    _tokens = None
+    _token_skip_table = None
 
     @classmethod
     def load_tokens(cls, tokens):
@@ -57,7 +73,7 @@ class Info(object):
         # construct `_token_skip_table`
         cls._token_skip_table = defaultdict(list)
         for index, token in enumerate(tokens):
-            token_skip_table[token].append(index)
+            cls._token_skip_table[token].append(index)
 
     @classmethod
     def get_tokens(cls):
@@ -65,7 +81,7 @@ class Info(object):
 
     @classmethod
     def get_token(cls, index):
-        return self._tokens.get(index, None)
+        return cls._tokens.get(index, None)
 
     @classmethod
     def search_match_token_indices(cls, key):
@@ -112,20 +128,21 @@ class MatchState(object):
             lambda x: [],
         )
 
-    def __init__(self):
-        self._consumed_flags = [False] * len(Info.get_tokens())
+    def __init__(self, InfoCls):
+        self._consumed_flags = [False] * len(InfoCls.get_tokens())
+        self._lower_bound = 0
 
         self._boolean_outcome = {}
-        self._add_boolean_outcome(Info.unbound_options)
-        self._add_boolean_outcome(Info.commands)
+        self._add_boolean_outcome(InfoCls.unbound_options)
+        self._add_boolean_outcome(InfoCls.commands)
 
         self._string_outcome = {}
-        self._add_string_outcome(Info.bound_options, Info.default_values)
-        self._add_string_outcome(Info.arguments, Info.default_values)
+        self._add_string_outcome(InfoCls.bound_options, InfoCls.default_values)
+        self._add_string_outcome(InfoCls.arguments, InfoCls.default_values)
 
         self._string_list_outcome = {}
-        self._add_string_list_outcome(info.oom_bound_options)
-        self._add_string_list_outcome(info.oom_arguments)
+        self._add_string_list_outcome(InfoCls.oom_bound_options)
+        self._add_string_list_outcome(InfoCls.oom_arguments)
 
     def add_boolean_outcome(self, key):
         self._boolean_outcome[key] = True
@@ -142,12 +159,20 @@ class MatchState(object):
     def get_consumed_flag(self, index):
         return self._consumed_flags[index]
 
+    def get_first_unconsumed_index(self):
+        for index, flag in enumerate(self._consumed_flags[self._lower_bound:]):
+            if not flag:
+                if index > self._lower_bound:
+                    self._lower_bound = index
+                return index
+        return None
+
 
 class MatchStateManager(object):
 
     @classmethod
-    def init(cls):
-        cls._match_state = MatchState()
+    def init(cls, match_state):
+        cls._match_state = match_state
         cls._state_stack = []
 
     @classmethod
@@ -164,8 +189,12 @@ class MatchStateManager(object):
 
     @classmethod
     def _prepare_unconsumed_index(cls, key):
+        # transform type of key.
+        if key.type_id == Token.COMMAND:
+            key = Token(Token.GENERAL_ELEMENT, key.value)
+
         for index in Info.search_match_token_indices(key):
-            if not self._match_state.get_consumed_flag(index):
+            if not cls._match_state.get_consumed_flag(index):
                 return index
         return None
 
@@ -175,14 +204,14 @@ class MatchStateManager(object):
         if index is None:
             return False
         # change match state.
-        self._match_state.add_boolean_outcome(key)
-        self._match_state.set_consumed_flag(index)
+        cls._match_state.add_boolean_outcome(key)
+        cls._match_state.set_consumed_flag(index)
         return True
 
     @classmethod
     def _try_to_generate_outcome_with_value(cls, key, store_key_value_pair):
 
-        def check_next_token(index):
+        def check_token(index):
             if index is None:
                 return False, None
             next_token = Info.get_token(index)
@@ -195,31 +224,47 @@ class MatchStateManager(object):
             value = next_token.value
             return flag, value
 
-        index = cls._prepare_unconsumed_index(key)
-        flag, value = check_next_token(index + 1)
-        if flag:
-            cls._match_state.set_consumed_flag(index)
-            cls._match_state.set_consumed_flag(index + 1)
-            store_key_value_pair(key, value)
-            return True
+        if key.type_id == Token.ARGUMENT:
+            # deal with `ARGUMENT`.
+            index = cls._match_state.get_first_unconsumed_index()
+            flag, value = check_token(index)
+            if flag:
+                cls._match_state.set_consumed_flag(index)
+                store_key_value_pair(key, value)
+                return True
+        else:
+            # deal with other nodes.
+            index = cls._prepare_unconsumed_index(key)
+            flag, value = check_token(index + 1)
+            if flag:
+                cls._match_state.set_consumed_flag(index)
+                cls._match_state.set_consumed_flag(index + 1)
+                store_key_value_pair(key, value)
+                return True
         return False
 
     @classmethod
     def try_to_generate_string_outcome(cls, key):
         return cls._try_to_generate_outcome_with_value(
             key,
-            self._match_state.add_string_outcome,
+            cls._match_state.add_string_outcome,
         )
 
     @classmethod
     def try_to_generate_string_list_outcome(cls, key):
         return cls._try_to_generate_outcome_with_value(
             key,
-            self._match_state.add_string_list_outcome,
+            cls._match_state.add_string_list_outcome,
         )
 
 
 # Implement classes representing following classes:
+#
+# Terminals:
+#   * PosixOption
+#   * GnuOption
+#   * Command
+#   * Argument
 #
 # Non-terminals:
 #   * Doc
@@ -228,12 +273,6 @@ class MatchStateManager(object):
 #   * LogicOr
 #   * LogicOptional
 #   * LogicOneOrMore
-#
-# Terminals:
-#   * PosixOption
-#   * GnuOption
-#   * Command
-#   * Argument
 class Terminal(object):
     # derived class should override this attribute.
     _type_id = None
@@ -283,7 +322,7 @@ class GnuOption(Terminal):
 
 
 class Command(Terminal):
-    _type_id = Token.GENERAL_ELEMENT
+    _type_id = Token.COMMAND
 
     def match(self):
         callbacks = [
@@ -293,7 +332,7 @@ class Command(Terminal):
 
 
 class Argument(Terminal):
-    _type_id = Token.GENERAL_ELEMENT
+    _type_id = Token.ARGUMENT
 
     def match(self):
         callbacks = [
