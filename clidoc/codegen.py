@@ -193,9 +193,16 @@ class MatchStateManager(object):
         if key.type_id == Token.COMMAND:
             key = Token(Token.GENERAL_ELEMENT, key.value)
 
-        for index in Info.search_match_token_indices(key):
+        match_indices = Info.search_match_token_indices(key)
+        for index in match_indices:
             if not cls._match_state.get_consumed_flag(index):
                 return index
+
+        # state: cannot find a unconsumed match token.
+        if Info.is_string_list_key(key) and match_indices:
+            # pretend the last matched token is not consumed.
+            return match_indices[-1]
+
         return None
 
     @classmethod
