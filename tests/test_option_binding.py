@@ -63,6 +63,15 @@ def test_option_e():
     assert ["a", "b", "c"] == outcome["-e"]
 
 
+def test_guideline_8():
+    outcome = clidoc(
+        ["utility_name", "-e", "a,b,,c,"],
+        CLIDOC_TEST_MODE,
+    )
+    key_checker(outcome)
+    assert ["a", "b", "c"] == outcome["-e"]
+
+
 def test_option_long_1():
     outcome = clidoc(
         ["utility_name", "--long-1", "!@#^&$!"],
