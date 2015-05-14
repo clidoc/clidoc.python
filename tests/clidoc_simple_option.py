@@ -674,3 +674,41 @@ def clidoc(argv, flags=0):
         return MatchStateManager.get_outcome()
     else:
         return respond_to_error()
+
+
+#####################
+#####  codegen  #####
+#####################
+Info.bound_options = set([
+])
+Info.unbound_options = set([
+    Token(Token.GNU_OPTION, "--long-1"),
+    Token(Token.POSIX_OPTION, "-a"),
+])
+Info.arguments = set([
+])
+Info.oom_bound_options = set([
+])
+Info.oom_arguments = set([
+])
+Info.commands = set([
+])
+Info.default_values = {
+}
+Info.option_to_representative_option = {
+    Token(Token.GNU_OPTION, "--long-1"): Token(Token.GNU_OPTION, "--long-1"),
+    Token(Token.POSIX_OPTION, "-a"): Token(Token.POSIX_OPTION, "-a"),
+}
+_t0 = PosixOption("-a")
+_t1 = GnuOption("--long-1")
+_nt2 = LogicXor()
+_nt2.add_child(_t0)
+_nt2.add_child(_t1)
+_nt5 = Doc()
+_nt5.add_child(_nt2)
+
+Info.doc_node = _nt5
+Info.doc_text = '''Usage:
+  utility_name -a
+  utility_name --long-1
+'''

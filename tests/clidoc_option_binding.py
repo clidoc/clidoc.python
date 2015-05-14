@@ -674,3 +674,104 @@ def clidoc(argv, flags=0):
         return MatchStateManager.get_outcome()
     else:
         return respond_to_error()
+
+
+#####################
+#####  codegen  #####
+#####################
+Info.bound_options = set([
+    Token(Token.GNU_OPTION, "--long-1"),
+    Token(Token.GNU_OPTION, "--long-2"),
+    Token(Token.POSIX_OPTION, "-a"),
+    Token(Token.POSIX_OPTION, "-b"),
+])
+Info.unbound_options = set([
+    Token(Token.GNU_OPTION, "--long-4"),
+    Token(Token.POSIX_OPTION, "-c"),
+])
+Info.arguments = set([
+    Token(Token.ARGUMENT, "<p3>"),
+])
+Info.oom_bound_options = set([
+    Token(Token.GNU_OPTION, "--long-3"),
+    Token(Token.POSIX_OPTION, "-d"),
+    Token(Token.POSIX_OPTION, "-e"),
+])
+Info.oom_arguments = set([
+])
+Info.commands = set([
+])
+Info.default_values = {
+}
+Info.option_to_representative_option = {
+    Token(Token.GNU_OPTION, "--long-1"): Token(Token.GNU_OPTION, "--long-1"),
+    Token(Token.GNU_OPTION, "--long-2"): Token(Token.GNU_OPTION, "--long-2"),
+    Token(Token.GNU_OPTION, "--long-3"): Token(Token.GNU_OPTION, "--long-3"),
+    Token(Token.GNU_OPTION, "--long-4"): Token(Token.GNU_OPTION, "--long-4"),
+    Token(Token.POSIX_OPTION, "-a"): Token(Token.POSIX_OPTION, "-a"),
+    Token(Token.POSIX_OPTION, "-b"): Token(Token.POSIX_OPTION, "-b"),
+    Token(Token.POSIX_OPTION, "-c"): Token(Token.POSIX_OPTION, "-c"),
+    Token(Token.POSIX_OPTION, "-d"): Token(Token.POSIX_OPTION, "-d"),
+    Token(Token.POSIX_OPTION, "-e"): Token(Token.POSIX_OPTION, "-e"),
+    Token(Token.POSIX_OPTION, "-f"): Token(Token.GNU_OPTION, "--long-4"),
+}
+_t0 = PosixOption("-a")
+_t1 = PosixOption("-b")
+_t2 = PosixOption("-c")
+_t3 = Argument("<p3>")
+_nt4 = LogicAnd()
+_nt4.add_child(_t2)
+_nt4.add_child(_t3)
+_t7 = PosixOption("-d")
+_nt8 = LogicOneOrMore()
+_nt8.add_child(_t7)
+_t10 = PosixOption("-e")
+_nt11 = LogicOneOrMore()
+_nt11.add_child(_t10)
+_nt13 = LogicOneOrMore()
+_nt13.add_child(_nt11)
+_t15 = GnuOption("--long-1")
+_t16 = GnuOption("--long-2")
+_t17 = GnuOption("--long-3")
+_nt18 = LogicOneOrMore()
+_nt18.add_child(_t17)
+_nt20 = LogicOneOrMore()
+_nt20.add_child(_nt18)
+_t22 = PosixOption("-f")
+_t23 = GnuOption("--long-4")
+_nt24 = LogicXor()
+_nt24.add_child(_t0)
+_nt24.add_child(_t1)
+_nt24.add_child(_nt4)
+_nt24.add_child(_nt8)
+_nt24.add_child(_nt13)
+_nt24.add_child(_t15)
+_nt24.add_child(_t16)
+_nt24.add_child(_nt20)
+_nt24.add_child(_t22)
+_nt24.add_child(_t23)
+_nt35 = Doc()
+_nt35.add_child(_nt24)
+
+Info.doc_node = _nt35
+Info.doc_text = '''Usage:
+  utility_name -a <p1>
+  utility_name -bP2
+  utility_name -c <p3>  -c not bound.
+  utility_name -d <p4>...
+  utility_name -eP5...
+
+  utility_name --long-1=<g1>
+  utility_name --long-2 <g2>
+  utility_name --long-3=<g3>...
+
+  utility_name -f|--long-4
+
+Options:
+  -a <p1>
+	-b P2
+  -d <p4>
+  -e P5
+  --long-2=<g2>
+	-f,--long-4
+'''

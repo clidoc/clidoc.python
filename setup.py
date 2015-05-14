@@ -166,8 +166,14 @@ def _lint():
     # Python 3 compat:
     # - The result of subprocess call outputs are byte strings, meaning we need
     #   to pass a byte string to endswith.
+    import os
+
+    def good_name(filename):
+        return (filename.endswith(b'.py')
+                and not os.path.basename(filename).startswith(b'clidoc_'))
+
     project_python_files = [filename for filename in get_project_files()
-                            if filename.endswith(b'.py')]
+                            if good_name(filename)]
     #
     # Replace `flake8` with `pep8`.
     #

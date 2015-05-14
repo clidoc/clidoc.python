@@ -674,3 +674,136 @@ def clidoc(argv, flags=0):
         return MatchStateManager.get_outcome()
     else:
         return respond_to_error()
+
+
+#####################
+#####  codegen  #####
+#####################
+Info.bound_options = set([
+])
+Info.unbound_options = set([
+    Token(Token.POSIX_OPTION, "-a"),
+    Token(Token.POSIX_OPTION, "-b"),
+    Token(Token.POSIX_OPTION, "-c"),
+    Token(Token.POSIX_OPTION, "-d"),
+    Token(Token.POSIX_OPTION, "-e"),
+    Token(Token.POSIX_OPTION, "-f"),
+    Token(Token.POSIX_OPTION, "-g"),
+    Token(Token.POSIX_OPTION, "-h"),
+    Token(Token.POSIX_OPTION, "-i"),
+    Token(Token.POSIX_OPTION, "-j"),
+    Token(Token.POSIX_OPTION, "-k"),
+    Token(Token.POSIX_OPTION, "-l"),
+    Token(Token.POSIX_OPTION, "-m"),
+    Token(Token.POSIX_OPTION, "-n"),
+    Token(Token.POSIX_OPTION, "-o"),
+    Token(Token.POSIX_OPTION, "-p"),
+    Token(Token.POSIX_OPTION, "-q"),
+    Token(Token.POSIX_OPTION, "-r"),
+])
+Info.arguments = set([
+])
+Info.oom_bound_options = set([
+])
+Info.oom_arguments = set([
+])
+Info.commands = set([
+    Token(Token.COMMAND, "flag_h"),
+    Token(Token.COMMAND, "flag_opqr"),
+])
+Info.default_values = {
+}
+Info.option_to_representative_option = {
+    Token(Token.POSIX_OPTION, "-a"): Token(Token.POSIX_OPTION, "-a"),
+    Token(Token.POSIX_OPTION, "-b"): Token(Token.POSIX_OPTION, "-b"),
+    Token(Token.POSIX_OPTION, "-c"): Token(Token.POSIX_OPTION, "-c"),
+    Token(Token.POSIX_OPTION, "-d"): Token(Token.POSIX_OPTION, "-d"),
+    Token(Token.POSIX_OPTION, "-e"): Token(Token.POSIX_OPTION, "-e"),
+    Token(Token.POSIX_OPTION, "-f"): Token(Token.POSIX_OPTION, "-f"),
+    Token(Token.POSIX_OPTION, "-g"): Token(Token.POSIX_OPTION, "-g"),
+    Token(Token.POSIX_OPTION, "-h"): Token(Token.POSIX_OPTION, "-h"),
+    Token(Token.POSIX_OPTION, "-i"): Token(Token.POSIX_OPTION, "-i"),
+    Token(Token.POSIX_OPTION, "-j"): Token(Token.POSIX_OPTION, "-j"),
+    Token(Token.POSIX_OPTION, "-k"): Token(Token.POSIX_OPTION, "-k"),
+    Token(Token.POSIX_OPTION, "-l"): Token(Token.POSIX_OPTION, "-l"),
+    Token(Token.POSIX_OPTION, "-m"): Token(Token.POSIX_OPTION, "-m"),
+    Token(Token.POSIX_OPTION, "-n"): Token(Token.POSIX_OPTION, "-n"),
+    Token(Token.POSIX_OPTION, "-o"): Token(Token.POSIX_OPTION, "-o"),
+    Token(Token.POSIX_OPTION, "-p"): Token(Token.POSIX_OPTION, "-p"),
+    Token(Token.POSIX_OPTION, "-q"): Token(Token.POSIX_OPTION, "-q"),
+    Token(Token.POSIX_OPTION, "-r"): Token(Token.POSIX_OPTION, "-r"),
+}
+_t0 = PosixOption("-a")
+_t1 = PosixOption("-b")
+_t2 = PosixOption("-c")
+_nt3 = LogicAnd()
+_nt3.add_child(_t0)
+_nt3.add_child(_t1)
+_nt3.add_child(_t2)
+_t7 = PosixOption("-d")
+_t8 = PosixOption("-e")
+_t9 = PosixOption("-f")
+_nt10 = LogicOr()
+_nt10.add_child(_t7)
+_nt10.add_child(_t8)
+_nt10.add_child(_t9)
+_t14 = PosixOption("-g")
+_t15 = PosixOption("-h")
+_nt16 = LogicOptional()
+_nt16.add_child(_t15)
+_t18 = Command("flag_h")
+_nt19 = LogicAnd()
+_nt19.add_child(_nt16)
+_nt19.add_child(_t18)
+_t22 = PosixOption("-i")
+_t23 = PosixOption("-j")
+_t24 = PosixOption("-k")
+_t25 = PosixOption("-l")
+_t26 = PosixOption("-m")
+_t27 = PosixOption("-n")
+_nt28 = LogicAnd()
+_nt28.add_child(_t24)
+_nt28.add_child(_t25)
+_nt28.add_child(_t26)
+_nt28.add_child(_t27)
+_t33 = PosixOption("-o")
+_t34 = PosixOption("-p")
+_t35 = PosixOption("-q")
+_nt36 = LogicAnd()
+_nt36.add_child(_t34)
+_nt36.add_child(_t35)
+_nt39 = LogicOptional()
+_nt39.add_child(_nt36)
+_t41 = PosixOption("-r")
+_nt42 = LogicAnd()
+_nt42.add_child(_t33)
+_nt42.add_child(_nt39)
+_nt42.add_child(_t41)
+_nt46 = LogicOptional()
+_nt46.add_child(_nt42)
+_t48 = Command("flag_opqr")
+_nt49 = LogicAnd()
+_nt49.add_child(_nt46)
+_nt49.add_child(_t48)
+_nt52 = LogicXor()
+_nt52.add_child(_nt3)
+_nt52.add_child(_nt10)
+_nt52.add_child(_t14)
+_nt52.add_child(_nt19)
+_nt52.add_child(_t22)
+_nt52.add_child(_t23)
+_nt52.add_child(_nt28)
+_nt52.add_child(_nt49)
+_nt61 = Doc()
+_nt61.add_child(_nt52)
+
+Info.doc_node = _nt61
+Info.doc_text = '''Usage:
+  utility_name -a -b -c
+  utility_name -def
+  utility_name (-g)
+  utility_name [-h] flag_h
+  utility_name -i|-j
+  utility_name (-k (-l -m) -n)
+  utility_name [-o [-p -q] -r] flag_opqr
+'''

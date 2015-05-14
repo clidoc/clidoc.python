@@ -674,3 +674,40 @@ def clidoc(argv, flags=0):
         return MatchStateManager.get_outcome()
     else:
         return respond_to_error()
+
+
+#####################
+#####  codegen  #####
+#####################
+Info.bound_options = set([
+])
+Info.unbound_options = set([
+])
+Info.arguments = set([
+])
+Info.oom_bound_options = set([
+])
+Info.oom_arguments = set([
+])
+Info.commands = set([
+    Token(Token.COMMAND, "command"),
+    Token(Token.COMMAND, "what-ever"),
+])
+Info.default_values = {
+}
+Info.option_to_representative_option = {
+}
+_t0 = Command("command")
+_t1 = Command("what-ever")
+_nt2 = LogicXor()
+_nt2.add_child(_t0)
+_nt2.add_child(_t1)
+_nt5 = Doc()
+_nt5.add_child(_nt2)
+
+Info.doc_node = _nt5
+Info.doc_text = '''Usage:
+  utility_name command
+  utility_name what-ever
+
+'''

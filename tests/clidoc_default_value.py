@@ -674,3 +674,60 @@ def clidoc(argv, flags=0):
         return MatchStateManager.get_outcome()
     else:
         return respond_to_error()
+
+
+#####################
+#####  codegen  #####
+#####################
+Info.bound_options = set([
+    Token(Token.POSIX_OPTION, "-a"),
+])
+Info.unbound_options = set([
+])
+Info.arguments = set([
+    Token(Token.ARGUMENT, "<arg2>"),
+])
+Info.oom_bound_options = set([
+])
+Info.oom_arguments = set([
+])
+Info.commands = set([
+    Token(Token.COMMAND, "flag_a"),
+    Token(Token.COMMAND, "flag_arg2"),
+])
+Info.default_values = {
+    Token(Token.POSIX_OPTION, "-a"): "42",
+    Token(Token.ARGUMENT, "<arg2>"): "43",
+}
+Info.option_to_representative_option = {
+    Token(Token.POSIX_OPTION, "-a"): Token(Token.POSIX_OPTION, "-a"),
+}
+_t0 = Command("flag_a")
+_t1 = PosixOption("-a")
+_nt2 = LogicOptional()
+_nt2.add_child(_t1)
+_nt4 = LogicAnd()
+_nt4.add_child(_t0)
+_nt4.add_child(_nt2)
+_t7 = Command("flag_arg2")
+_t8 = Argument("<arg2>")
+_nt9 = LogicOptional()
+_nt9.add_child(_t8)
+_nt11 = LogicAnd()
+_nt11.add_child(_t7)
+_nt11.add_child(_nt9)
+_nt14 = LogicXor()
+_nt14.add_child(_nt4)
+_nt14.add_child(_nt11)
+_nt17 = Doc()
+_nt17.add_child(_nt14)
+
+Info.doc_node = _nt17
+Info.doc_text = '''Usage:
+  utility_name flag_a [-aARG1]
+  utility_name flag_arg2 [<arg2>]
+
+Options:
+  -a ARG1 [default: "42"]
+  <arg2> [default: "43"]
+'''
