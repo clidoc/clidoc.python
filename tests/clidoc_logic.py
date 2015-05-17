@@ -38,7 +38,7 @@ def clidoc(argv, flags=0):
     argv_prepprocessor = ArgvPreprocessor(
         argv,
         Info.option_to_representative_option,
-        Info.bound_options,
+        Info.bound_options | Info.oom_bound_options,
     )
     argv_prepprocessor.tokenize_argv()
     if not argv_prepprocessor.tokens:
@@ -536,7 +536,11 @@ class ArgvPreprocessor(object):
     # `bound_options`: a set of bound options.
     def __init__(self, argv, option_to_rep_option, bound_options):
         # ignore `argv[0]`.
-        self._argv = argv[1:]
+        self._argv = []
+        for arg in argv[1:]:
+            arg = arg.decode('utf-8') if hasattr(arg, 'decode') else arg
+            self._argv.append(arg)
+
         self._option_to_rep_option = option_to_rep_option
         self._bound_options = bound_options
         # preprocessed input arguments.
@@ -717,6 +721,7 @@ Info.oom_arguments = set([
 ])
 Info.commands = set([
     Token(Token.COMMAND, "flag_h"),
+    Token(Token.COMMAND, "flag_ij"),
     Token(Token.COMMAND, "flag_opqr"),
 ])
 Info.default_values = {
@@ -765,53 +770,59 @@ _nt19.add_child(_nt16)
 _nt19.add_child(_t18)
 _t22 = PosixOption("-i")
 _t23 = PosixOption("-j")
-_t24 = PosixOption("-k")
-_t25 = PosixOption("-l")
-_t26 = PosixOption("-m")
-_t27 = PosixOption("-n")
+_nt24 = LogicXor()
+_nt24.add_child(_t22)
+_nt24.add_child(_t23)
+_t27 = Command("flag_ij")
 _nt28 = LogicAnd()
-_nt28.add_child(_t24)
-_nt28.add_child(_t25)
-_nt28.add_child(_t26)
+_nt28.add_child(_nt24)
 _nt28.add_child(_t27)
-_t33 = PosixOption("-o")
-_t34 = PosixOption("-p")
-_t35 = PosixOption("-q")
-_nt36 = LogicAnd()
-_nt36.add_child(_t34)
-_nt36.add_child(_t35)
-_nt39 = LogicOptional()
-_nt39.add_child(_nt36)
-_t41 = PosixOption("-r")
-_nt42 = LogicAnd()
-_nt42.add_child(_t33)
-_nt42.add_child(_nt39)
-_nt42.add_child(_t41)
+_t31 = PosixOption("-k")
+_t32 = PosixOption("-l")
+_t33 = PosixOption("-m")
+_t34 = PosixOption("-n")
+_nt35 = LogicAnd()
+_nt35.add_child(_t31)
+_nt35.add_child(_t32)
+_nt35.add_child(_t33)
+_nt35.add_child(_t34)
+_t40 = PosixOption("-o")
+_t41 = PosixOption("-p")
+_t42 = PosixOption("-q")
+_nt43 = LogicAnd()
+_nt43.add_child(_t41)
+_nt43.add_child(_t42)
 _nt46 = LogicOptional()
-_nt46.add_child(_nt42)
-_t48 = Command("flag_opqr")
+_nt46.add_child(_nt43)
+_t48 = PosixOption("-r")
 _nt49 = LogicAnd()
+_nt49.add_child(_t40)
 _nt49.add_child(_nt46)
 _nt49.add_child(_t48)
-_nt52 = LogicXor()
-_nt52.add_child(_nt3)
-_nt52.add_child(_nt10)
-_nt52.add_child(_t14)
-_nt52.add_child(_nt19)
-_nt52.add_child(_t22)
-_nt52.add_child(_t23)
-_nt52.add_child(_nt28)
-_nt52.add_child(_nt49)
-_nt61 = Doc()
-_nt61.add_child(_nt52)
+_nt53 = LogicOptional()
+_nt53.add_child(_nt49)
+_t55 = Command("flag_opqr")
+_nt56 = LogicAnd()
+_nt56.add_child(_nt53)
+_nt56.add_child(_t55)
+_nt59 = LogicXor()
+_nt59.add_child(_nt3)
+_nt59.add_child(_nt10)
+_nt59.add_child(_t14)
+_nt59.add_child(_nt19)
+_nt59.add_child(_nt28)
+_nt59.add_child(_nt35)
+_nt59.add_child(_nt56)
+_nt67 = Doc()
+_nt67.add_child(_nt59)
 
-Info.doc_node = _nt61
+Info.doc_node = _nt67
 Info.doc_text = '''Usage:
   utility_name -a -b -c
   utility_name -def
   utility_name (-g)
   utility_name [-h] flag_h
-  utility_name -i|-j
+  utility_name -i|-j flag_ij
   utility_name (-k (-l -m) -n)
   utility_name [-o [-p -q] -r] flag_opqr
 '''

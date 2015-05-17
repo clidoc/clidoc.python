@@ -12,7 +12,7 @@ key_checker = generate_key_checker(
         "-d", "-e", "-f",
         "-g",
         "-h", "flag_h",
-        "-i", "-j",
+        "-i", "-j", "flag_ij",
         "-k", "-l", "-m", "-n",
         "-o", "-p", "-q", "-r", "flag_opqr",
     },
@@ -81,14 +81,14 @@ def test_h():
 
 def test_ij():
     outcome = clidoc(
-        ["utility_name", "-i"],
+        ["utility_name", "-i", "flag_ij"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
     assert outcome["-i"]
 
     assert not clidoc(
-        ["utility_name", "-ij"],
+        ["utility_name", "-ij", "flag_ij"],
         CLIDOC_TEST_MODE,
     )
 

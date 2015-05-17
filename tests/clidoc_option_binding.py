@@ -38,7 +38,7 @@ def clidoc(argv, flags=0):
     argv_prepprocessor = ArgvPreprocessor(
         argv,
         Info.option_to_representative_option,
-        Info.bound_options,
+        Info.bound_options | Info.oom_bound_options,
     )
     argv_prepprocessor.tokenize_argv()
     if not argv_prepprocessor.tokens:
@@ -536,7 +536,11 @@ class ArgvPreprocessor(object):
     # `bound_options`: a set of bound options.
     def __init__(self, argv, option_to_rep_option, bound_options):
         # ignore `argv[0]`.
-        self._argv = argv[1:]
+        self._argv = []
+        for arg in argv[1:]:
+            arg = arg.decode('utf-8') if hasattr(arg, 'decode') else arg
+            self._argv.append(arg)
+
         self._option_to_rep_option = option_to_rep_option
         self._bound_options = bound_options
         # preprocessed input arguments.
@@ -736,32 +740,28 @@ _nt8.add_child(_t7)
 _t10 = PosixOption("-e")
 _nt11 = LogicOneOrMore()
 _nt11.add_child(_t10)
-_nt13 = LogicOneOrMore()
-_nt13.add_child(_nt11)
-_t15 = GnuOption("--long-1")
-_t16 = GnuOption("--long-2")
-_t17 = GnuOption("--long-3")
-_nt18 = LogicOneOrMore()
-_nt18.add_child(_t17)
-_nt20 = LogicOneOrMore()
-_nt20.add_child(_nt18)
-_t22 = PosixOption("-f")
-_t23 = GnuOption("--long-4")
-_nt24 = LogicXor()
-_nt24.add_child(_t0)
-_nt24.add_child(_t1)
-_nt24.add_child(_nt4)
-_nt24.add_child(_nt8)
-_nt24.add_child(_nt13)
-_nt24.add_child(_t15)
-_nt24.add_child(_t16)
-_nt24.add_child(_nt20)
-_nt24.add_child(_t22)
-_nt24.add_child(_t23)
-_nt35 = Doc()
-_nt35.add_child(_nt24)
+_t13 = GnuOption("--long-1")
+_t14 = GnuOption("--long-2")
+_t15 = GnuOption("--long-3")
+_nt16 = LogicOneOrMore()
+_nt16.add_child(_t15)
+_t18 = PosixOption("-f")
+_t19 = GnuOption("--long-4")
+_nt20 = LogicXor()
+_nt20.add_child(_t0)
+_nt20.add_child(_t1)
+_nt20.add_child(_nt4)
+_nt20.add_child(_nt8)
+_nt20.add_child(_nt11)
+_nt20.add_child(_t13)
+_nt20.add_child(_t14)
+_nt20.add_child(_nt16)
+_nt20.add_child(_t18)
+_nt20.add_child(_t19)
+_nt31 = Doc()
+_nt31.add_child(_nt20)
 
-Info.doc_node = _nt35
+Info.doc_node = _nt31
 Info.doc_text = '''Usage:
   utility_name -a <p1>
   utility_name -bP2
