@@ -720,9 +720,9 @@ Info.oom_bound_options = set([
 Info.oom_arguments = set([
 ])
 Info.commands = set([
-    Token(Token.COMMAND, "flag_h"),
-    Token(Token.COMMAND, "flag_ij"),
-    Token(Token.COMMAND, "flag_opqr"),
+    Token(Token.COMMAND, "flag-h"),
+    Token(Token.COMMAND, "flag-ij"),
+    Token(Token.COMMAND, "flag-opqr"),
 ])
 Info.default_values = {
 }
@@ -764,7 +764,7 @@ _t14 = PosixOption("-g")
 _t15 = PosixOption("-h")
 _nt16 = LogicOptional()
 _nt16.add_child(_t15)
-_t18 = Command("flag_h")
+_t18 = Command("flag-h")
 _nt19 = LogicAnd()
 _nt19.add_child(_nt16)
 _nt19.add_child(_t18)
@@ -773,7 +773,7 @@ _t23 = PosixOption("-j")
 _nt24 = LogicXor()
 _nt24.add_child(_t22)
 _nt24.add_child(_t23)
-_t27 = Command("flag_ij")
+_t27 = Command("flag-ij")
 _nt28 = LogicAnd()
 _nt28.add_child(_nt24)
 _nt28.add_child(_t27)
@@ -801,7 +801,7 @@ _nt49.add_child(_nt46)
 _nt49.add_child(_t48)
 _nt53 = LogicOptional()
 _nt53.add_child(_nt49)
-_t55 = Command("flag_opqr")
+_t55 = Command("flag-opqr")
 _nt56 = LogicAnd()
 _nt56.add_child(_nt53)
 _nt56.add_child(_t55)
@@ -821,8 +821,8 @@ Info.doc_text = '''Usage:
   utility_name -a -b -c
   utility_name -def
   utility_name (-g)
-  utility_name [-h] flag_h
-  utility_name -i|-j flag_ij
+  utility_name [-h] flag-h
+  utility_name -i|-j flag-ij
   utility_name (-k (-l -m) -n)
-  utility_name [-o [-p -q] -r] flag_opqr
+  utility_name [-o [-p -q] -r] flag-opqr
 '''

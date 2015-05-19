@@ -8,8 +8,8 @@ from utils import generate_key_checker, CLIDOC_TEST_MODE
 
 key_checker = generate_key_checker(
     {
-        "flag_a",
-        "flag_arg2",
+        "flag-a",
+        "flag-arg2",
     },
     {
         "-a",
@@ -21,7 +21,7 @@ key_checker = generate_key_checker(
 
 def test_option_a():
     outcome = clidoc(
-        ["utility_name", "flag_a"],
+        ["utility_name", "flag-a"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
@@ -30,7 +30,7 @@ def test_option_a():
 
 def test_arg2():
     outcome = clidoc(
-        ["utility_name", "flag_arg2"],
+        ["utility_name", "flag-arg2"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)

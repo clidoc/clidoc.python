@@ -11,10 +11,10 @@ key_checker = generate_key_checker(
         "-a", "-b", "-c",
         "-d", "-e", "-f",
         "-g",
-        "-h", "flag_h",
-        "-i", "-j", "flag_ij",
+        "-h", "flag-h",
+        "-i", "-j", "flag-ij",
         "-k", "-l", "-m", "-n",
-        "-o", "-p", "-q", "-r", "flag_opqr",
+        "-o", "-p", "-q", "-r", "flag-opqr",
     },
     set(),
     set(),
@@ -72,7 +72,7 @@ def test_g():
 
 def test_h():
     outcome = clidoc(
-        ["utility_name", "flag_h"],
+        ["utility_name", "flag-h"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
@@ -81,14 +81,14 @@ def test_h():
 
 def test_ij():
     outcome = clidoc(
-        ["utility_name", "-i", "flag_ij"],
+        ["utility_name", "-i", "flag-ij"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
     assert outcome["-i"]
 
     assert not clidoc(
-        ["utility_name", "-ij", "flag_ij"],
+        ["utility_name", "-ij", "flag-ij"],
         CLIDOC_TEST_MODE,
     )
 
@@ -116,7 +116,7 @@ def test_klmn():
 
 def test_opqr():
     outcome = clidoc(
-        ["utility_name", "-opqr", "flag_opqr"],
+        ["utility_name", "-opqr", "flag-opqr"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
@@ -126,7 +126,7 @@ def test_opqr():
     assert outcome["-r"]
 
     outcome = clidoc(
-        ["utility_name", "-or", "flag_opqr"],
+        ["utility_name", "-or", "flag-opqr"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
@@ -136,7 +136,7 @@ def test_opqr():
     assert outcome["-r"]
 
     outcome = clidoc(
-        ["utility_name", "flag_opqr"],
+        ["utility_name", "flag-opqr"],
         CLIDOC_TEST_MODE,
     )
     key_checker(outcome)
