@@ -59,6 +59,8 @@ def test_tokenization():
 
         "-foFILE",
 
+        "command",
+
         "--",
         "-c",
         "--long",
@@ -83,6 +85,8 @@ def test_tokenization():
         Token(Token.POSIX_OPTION, '-f'),
         Token(Token.POSIX_OPTION, '-o'),
         Token(Token.GENERAL_ELEMENT, 'FILE'),
+
+        Token(Token.COMMAND, 'command'),
 
         Token(Token.GENERAL_ELEMENT, '-c'),
         Token(Token.GENERAL_ELEMENT, '--long'),
