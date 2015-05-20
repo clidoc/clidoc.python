@@ -727,30 +727,54 @@ Info.bound_options = set([
 Info.unbound_options = set([
 ])
 Info.arguments = set([
+    Token(Token.ARGUMENT, "<arg2>"),
+    Token(Token.ARGUMENT, "ARG1"),
 ])
 Info.oom_bound_options = set([
 ])
 Info.oom_arguments = set([
+    Token(Token.ARGUMENT, "<arg3>"),
 ])
 Info.commands = set([
-    Token(Token.COMMAND, "command"),
-    Token(Token.COMMAND, "what-ever"),
+    Token(Token.COMMAND, "command1"),
+    Token(Token.COMMAND, "command2"),
+    Token(Token.COMMAND, "flag-1"),
+    Token(Token.COMMAND, "flag-2"),
 ])
 Info.default_values = {
 }
 Info.option_to_representative_option = {
 }
-_t0 = Command("command")
-_t1 = Command("what-ever")
-_nt2 = LogicXor()
+_t0 = Command("flag-1")
+_t1 = Argument("ARG1")
+_nt2 = LogicAnd()
 _nt2.add_child(_t0)
 _nt2.add_child(_t1)
-_nt5 = Doc()
-_nt5.add_child(_nt2)
+_t5 = Command("flag-2")
+_t6 = Argument("<arg2>")
+_nt7 = LogicAnd()
+_nt7.add_child(_t5)
+_nt7.add_child(_t6)
+_t10 = Command("command1")
+_t11 = Command("command2")
+_nt12 = LogicAnd()
+_nt12.add_child(_t10)
+_nt12.add_child(_t11)
+_t15 = Argument("<arg3>")
+_nt16 = LogicOneOrMore()
+_nt16.add_child(_t15)
+_nt18 = LogicXor()
+_nt18.add_child(_nt2)
+_nt18.add_child(_nt7)
+_nt18.add_child(_nt12)
+_nt18.add_child(_nt16)
+_nt23 = Doc()
+_nt23.add_child(_nt18)
 
-Info.doc_node = _nt5
+Info.doc_node = _nt23
 Info.doc_text = '''Usage:
-  utility_name command
-  utility_name what-ever
-
+  utility_name flag-1 ARG1
+  utility_name flag-2 <arg2>
+  utility_name command1 command2
+  utility_name <arg3>...
 '''

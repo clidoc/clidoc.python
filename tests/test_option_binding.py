@@ -10,6 +10,7 @@ key_checker = generate_key_checker(
     {
         "-c",
         "--long-4",
+        "command",
     },
     {
         "-a",

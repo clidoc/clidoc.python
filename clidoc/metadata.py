@@ -8,7 +8,7 @@ Information describing the project.
 package = 'clidoc'
 project = "clidoc"
 project_no_spaces = project.replace(' ', '')
-version = '0.1'
+version = '0.2-rc-2'
 description = ''
 authors = ['Zhan Haoxun']
 authors_string = ', '.join(authors)
