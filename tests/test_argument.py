@@ -55,3 +55,10 @@ def test_arg3():
     )
     key_checker(outcome)
     assert ["command1", "a"] == outcome["<arg3>"]
+
+    outcome = clidoc(
+        ["utility_name", "flag-1", "a", "b"],
+        CLIDOC_TEST_MODE,
+    )
+    key_checker(outcome)
+    assert ["flag-1", "a", "b"] == outcome["<arg3>"]
