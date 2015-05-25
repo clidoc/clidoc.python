@@ -736,11 +736,6 @@ class ArgvPreprocessor(object):
     def tokenize_argv(self):
         self._fill_tokens()
         self._correct_oom_argument_type()
-
-
-#####################
-#####  codegen  #####
-#####################
 Info.bound_options = set([
 ])
 Info.unbound_options = set([
@@ -761,16 +756,15 @@ Info.option_to_representative_option = {
     Token(Token.GNU_OPTION, "--long-1"): Token(Token.GNU_OPTION, "--long-1"),
     Token(Token.POSIX_OPTION, "-a"): Token(Token.POSIX_OPTION, "-a"),
 }
-_t0 = PosixOption("-a")
-_t1 = GnuOption("--long-1")
-_nt2 = LogicXor()
-_nt2.add_child(_t0)
-_nt2.add_child(_t1)
-_nt5 = Doc()
-_nt5.add_child(_nt2)
-
-Info.doc_node = _nt5
 Info.doc_text = '''Usage:
   utility_name -a
   utility_name --long-1
 '''
+node_0 = PosixOption("-a")
+node_1 = GnuOption("--long-1")
+node_2 = LogicXor()
+node_2.add_child(node_0)
+node_2.add_child(node_1)
+node_3 = Doc()
+node_3.add_child(node_2)
+Info.doc_node = node_3

@@ -736,11 +736,6 @@ class ArgvPreprocessor(object):
     def tokenize_argv(self):
         self._fill_tokens()
         self._correct_oom_argument_type()
-
-
-#####################
-#####  codegen  #####
-#####################
 Info.bound_options = set([
 ])
 Info.unbound_options = set([
@@ -759,17 +754,16 @@ Info.default_values = {
 }
 Info.option_to_representative_option = {
 }
-_t0 = Command("command")
-_t1 = Command("what-ever")
-_nt2 = LogicXor()
-_nt2.add_child(_t0)
-_nt2.add_child(_t1)
-_nt5 = Doc()
-_nt5.add_child(_nt2)
-
-Info.doc_node = _nt5
 Info.doc_text = '''Usage:
   utility_name command
   utility_name what-ever
 
 '''
+node_0 = Command("command")
+node_1 = Command("what-ever")
+node_2 = LogicXor()
+node_2.add_child(node_0)
+node_2.add_child(node_1)
+node_3 = Doc()
+node_3.add_child(node_2)
+Info.doc_node = node_3

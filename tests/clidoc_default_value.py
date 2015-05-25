@@ -736,11 +736,6 @@ class ArgvPreprocessor(object):
     def tokenize_argv(self):
         self._fill_tokens()
         self._correct_oom_argument_type()
-
-
-#####################
-#####  codegen  #####
-#####################
 Info.bound_options = set([
     Token(Token.POSIX_OPTION, "-a"),
 ])
@@ -764,27 +759,6 @@ Info.default_values = {
 Info.option_to_representative_option = {
     Token(Token.POSIX_OPTION, "-a"): Token(Token.POSIX_OPTION, "-a"),
 }
-_t0 = Command("flag-a")
-_t1 = PosixOption("-a")
-_nt2 = LogicOptional()
-_nt2.add_child(_t1)
-_nt4 = LogicAnd()
-_nt4.add_child(_t0)
-_nt4.add_child(_nt2)
-_t7 = Command("flag-arg2")
-_t8 = Argument("<arg2>")
-_nt9 = LogicOptional()
-_nt9.add_child(_t8)
-_nt11 = LogicAnd()
-_nt11.add_child(_t7)
-_nt11.add_child(_nt9)
-_nt14 = LogicXor()
-_nt14.add_child(_nt4)
-_nt14.add_child(_nt11)
-_nt17 = Doc()
-_nt17.add_child(_nt14)
-
-Info.doc_node = _nt17
 Info.doc_text = '''Usage:
   utility_name flag-a [-aARG1]
   utility_name flag-arg2 [<arg2>]
@@ -793,3 +767,23 @@ Options:
   -a ARG1 [default: "42"]
   <arg2> [default: "43"]
 '''
+node_0 = Command("flag-a")
+node_1 = PosixOption("-a")
+node_2 = LogicOptional()
+node_2.add_child(node_1)
+node_3 = LogicAnd()
+node_3.add_child(node_0)
+node_3.add_child(node_2)
+node_4 = Command("flag-arg2")
+node_5 = Argument("<arg2>")
+node_6 = LogicOptional()
+node_6.add_child(node_5)
+node_7 = LogicAnd()
+node_7.add_child(node_4)
+node_7.add_child(node_6)
+node_8 = LogicXor()
+node_8.add_child(node_3)
+node_8.add_child(node_7)
+node_9 = Doc()
+node_9.add_child(node_8)
+Info.doc_node = node_9

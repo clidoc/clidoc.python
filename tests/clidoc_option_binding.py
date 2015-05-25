@@ -736,11 +736,6 @@ class ArgvPreprocessor(object):
     def tokenize_argv(self):
         self._fill_tokens()
         self._correct_oom_argument_type()
-
-
-#####################
-#####  codegen  #####
-#####################
 Info.bound_options = set([
     Token(Token.GNU_OPTION, "--long-1"),
     Token(Token.GNU_OPTION, "--long-2"),
@@ -778,43 +773,6 @@ Info.option_to_representative_option = {
     Token(Token.POSIX_OPTION, "-e"): Token(Token.POSIX_OPTION, "-e"),
     Token(Token.POSIX_OPTION, "-f"): Token(Token.GNU_OPTION, "--long-4"),
 }
-_t0 = PosixOption("-a")
-_t1 = PosixOption("-b")
-_t2 = PosixOption("-c")
-_t3 = Argument("<p3>")
-_nt4 = LogicAnd()
-_nt4.add_child(_t2)
-_nt4.add_child(_t3)
-_t7 = PosixOption("-d")
-_nt8 = LogicOneOrMore()
-_nt8.add_child(_t7)
-_t10 = PosixOption("-e")
-_nt11 = LogicOneOrMore()
-_nt11.add_child(_t10)
-_t13 = Command("command")
-_t14 = GnuOption("--long-1")
-_t15 = GnuOption("--long-2")
-_t16 = GnuOption("--long-3")
-_nt17 = LogicOneOrMore()
-_nt17.add_child(_t16)
-_t19 = PosixOption("-f")
-_t20 = GnuOption("--long-4")
-_nt21 = LogicXor()
-_nt21.add_child(_t0)
-_nt21.add_child(_t1)
-_nt21.add_child(_nt4)
-_nt21.add_child(_nt8)
-_nt21.add_child(_nt11)
-_nt21.add_child(_t13)
-_nt21.add_child(_t14)
-_nt21.add_child(_t15)
-_nt21.add_child(_nt17)
-_nt21.add_child(_t19)
-_nt21.add_child(_t20)
-_nt33 = Doc()
-_nt33.add_child(_nt21)
-
-Info.doc_node = _nt33
 Info.doc_text = '''Usage:
   utility_name -a <p1>
   utility_name -bP2
@@ -837,3 +795,39 @@ Options:
   --long-2=<g2>
 	-f,--long-4
 '''
+node_0 = PosixOption("-a")
+node_1 = PosixOption("-b")
+node_2 = PosixOption("-c")
+node_3 = Argument("<p3>")
+node_4 = LogicAnd()
+node_4.add_child(node_2)
+node_4.add_child(node_3)
+node_5 = PosixOption("-d")
+node_6 = LogicOneOrMore()
+node_6.add_child(node_5)
+node_7 = PosixOption("-e")
+node_8 = LogicOneOrMore()
+node_8.add_child(node_7)
+node_9 = Command("command")
+node_10 = GnuOption("--long-1")
+node_11 = GnuOption("--long-2")
+node_12 = GnuOption("--long-3")
+node_13 = LogicOneOrMore()
+node_13.add_child(node_12)
+node_14 = PosixOption("-f")
+node_15 = GnuOption("--long-4")
+node_16 = LogicXor()
+node_16.add_child(node_0)
+node_16.add_child(node_1)
+node_16.add_child(node_4)
+node_16.add_child(node_6)
+node_16.add_child(node_8)
+node_16.add_child(node_9)
+node_16.add_child(node_10)
+node_16.add_child(node_11)
+node_16.add_child(node_13)
+node_16.add_child(node_14)
+node_16.add_child(node_15)
+node_17 = Doc()
+node_17.add_child(node_16)
+Info.doc_node = node_17

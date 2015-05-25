@@ -736,11 +736,6 @@ class ArgvPreprocessor(object):
     def tokenize_argv(self):
         self._fill_tokens()
         self._correct_oom_argument_type()
-
-
-#####################
-#####  codegen  #####
-#####################
 Info.bound_options = set([
 ])
 Info.unbound_options = set([
@@ -764,36 +759,35 @@ Info.default_values = {
 }
 Info.option_to_representative_option = {
 }
-_t0 = Command("flag-1")
-_t1 = Argument("ARG1")
-_nt2 = LogicAnd()
-_nt2.add_child(_t0)
-_nt2.add_child(_t1)
-_t5 = Command("flag-2")
-_t6 = Argument("<arg2>")
-_nt7 = LogicAnd()
-_nt7.add_child(_t5)
-_nt7.add_child(_t6)
-_t10 = Command("command1")
-_t11 = Command("command2")
-_nt12 = LogicAnd()
-_nt12.add_child(_t10)
-_nt12.add_child(_t11)
-_t15 = Argument("<arg3>")
-_nt16 = LogicOneOrMore()
-_nt16.add_child(_t15)
-_nt18 = LogicXor()
-_nt18.add_child(_nt2)
-_nt18.add_child(_nt7)
-_nt18.add_child(_nt12)
-_nt18.add_child(_nt16)
-_nt23 = Doc()
-_nt23.add_child(_nt18)
-
-Info.doc_node = _nt23
 Info.doc_text = '''Usage:
   utility_name flag-1 ARG1
   utility_name flag-2 <arg2>
   utility_name command1 command2
   utility_name <arg3>...
 '''
+node_0 = Command("flag-1")
+node_1 = Argument("ARG1")
+node_2 = LogicAnd()
+node_2.add_child(node_0)
+node_2.add_child(node_1)
+node_3 = Command("flag-2")
+node_4 = Argument("<arg2>")
+node_5 = LogicAnd()
+node_5.add_child(node_3)
+node_5.add_child(node_4)
+node_6 = Command("command1")
+node_7 = Command("command2")
+node_8 = LogicAnd()
+node_8.add_child(node_6)
+node_8.add_child(node_7)
+node_9 = Argument("<arg3>")
+node_10 = LogicOneOrMore()
+node_10.add_child(node_9)
+node_11 = LogicXor()
+node_11.add_child(node_2)
+node_11.add_child(node_5)
+node_11.add_child(node_8)
+node_11.add_child(node_10)
+node_12 = Doc()
+node_12.add_child(node_11)
+Info.doc_node = node_12
