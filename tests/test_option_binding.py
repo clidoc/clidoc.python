@@ -79,6 +79,20 @@ def test_guideline_8():
     key_checker(outcome)
     assert ["a", "b", "c"] == outcome["-e"]
 
+    outcome = clidoc(
+        ["utility_name", "-e", "a,b,,c,"],
+        CLIDOC_TEST_MODE | GUIDELINE_8_OFF,
+    )
+    key_checker(outcome)
+    assert ["a,b,,c,"] == outcome["-e"]
+
+    outcome = clidoc(
+        ["utility_name", "-e", "c,d", "-e", "a,b,,c,"],
+        CLIDOC_TEST_MODE,
+    )
+    key_checker(outcome)
+    assert ["c,d", "a,b,,c,"] == outcome["-e"]
+
 
 def test_option_long_1():
     outcome = clidoc(
