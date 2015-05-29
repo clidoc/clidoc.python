@@ -720,18 +720,21 @@ class ArgvPreprocessor(object):
                 break
 
     def _correct_oom_argument_type(self):
-        is_oom_bound_option_argument = False
-        for token in self.tokens:
-            is_oom_bound_option = token in Info.oom_bound_options
-            if is_oom_bound_option and not is_oom_bound_option_argument:
-                is_oom_bound_option_argument = True
-                continue
-            if not is_oom_bound_option and is_oom_bound_option_argument:
-                token.type_id = Token.GENERAL_ELEMENT
-                continue
-            if is_oom_bound_option and is_oom_bound_option_argument:
-                is_oom_bound_option_argument = False
-                continue
+        matched_oom_bound_options = set()
+        next_oom_bound_option_index = len(self.tokens)
+        for index, token in reversed(list(enumerate(self.tokens))):
+            if (token in Info.oom_bound_options
+                    and token not in matched_oom_bound_options):
+                target_range = range(
+                    index + 1,
+                    next_oom_bound_option_index,
+                )
+                for target_index in target_range:
+                    self.tokens[target_index].type_id = Token.GENERAL_ELEMENT
+                # record oom_bound_option.
+                matched_oom_bound_options.add(token)
+            if token in Info.oom_bound_options:
+                next_oom_bound_option_index = index
 
     def tokenize_argv(self):
         self._fill_tokens()
@@ -779,7 +782,7 @@ Info.doc_text = '''Usage:
   utility_name -c <p3>  -c not bound.
   utility_name -d <p4>...
   utility_name -eP5...
-  utility_name command
+  utility_name command -eP5...
 
   utility_name --long-1=<g1>
   utility_name --long-2 <g2>
@@ -809,25 +812,31 @@ node_7 = PosixOption("-e")
 node_8 = LogicOneOrMore()
 node_8.add_child(node_7)
 node_9 = Command("command")
-node_10 = GnuOption("--long-1")
-node_11 = GnuOption("--long-2")
-node_12 = GnuOption("--long-3")
-node_13 = LogicOneOrMore()
-node_13.add_child(node_12)
-node_14 = PosixOption("-f")
-node_15 = GnuOption("--long-4")
-node_16 = LogicXor()
-node_16.add_child(node_0)
-node_16.add_child(node_1)
-node_16.add_child(node_4)
-node_16.add_child(node_6)
-node_16.add_child(node_8)
-node_16.add_child(node_9)
-node_16.add_child(node_10)
-node_16.add_child(node_11)
-node_16.add_child(node_13)
-node_16.add_child(node_14)
+node_10 = PosixOption("-e")
+node_11 = LogicOneOrMore()
+node_11.add_child(node_10)
+node_12 = LogicAnd()
+node_12.add_child(node_9)
+node_12.add_child(node_11)
+node_13 = GnuOption("--long-1")
+node_14 = GnuOption("--long-2")
+node_15 = GnuOption("--long-3")
+node_16 = LogicOneOrMore()
 node_16.add_child(node_15)
-node_17 = Doc()
-node_17.add_child(node_16)
-Info.doc_node = node_17
+node_17 = PosixOption("-f")
+node_18 = GnuOption("--long-4")
+node_19 = LogicXor()
+node_19.add_child(node_0)
+node_19.add_child(node_1)
+node_19.add_child(node_4)
+node_19.add_child(node_6)
+node_19.add_child(node_8)
+node_19.add_child(node_12)
+node_19.add_child(node_13)
+node_19.add_child(node_14)
+node_19.add_child(node_16)
+node_19.add_child(node_17)
+node_19.add_child(node_18)
+node_20 = Doc()
+node_20.add_child(node_19)
+Info.doc_node = node_20

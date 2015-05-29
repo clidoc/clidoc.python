@@ -70,6 +70,21 @@ def test_option_e():
     key_checker(outcome)
     assert ["a", "b", "c"] == outcome["-e"]
 
+    outcome = clidoc(
+        ["utility_name", "-e", "a", "command", "b"],
+        CLIDOC_TEST_MODE,
+    )
+    key_checker(outcome)
+    assert ["a", "command", "b"] == outcome["-e"]
+
+    outcome = clidoc(
+        ["utility_name", "-e", "a", "command", "-e", "b", "c"],
+        CLIDOC_TEST_MODE,
+    )
+    key_checker(outcome)
+    assert ["a", "b", "c"] == outcome["-e"]
+    assert outcome["command"]
+
 
 def test_guideline_8():
     outcome = clidoc(
